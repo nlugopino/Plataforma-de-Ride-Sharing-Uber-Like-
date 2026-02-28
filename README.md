@@ -1,5 +1,12 @@
 # Plataforma de Ride-Sharing (Uber-like)
 
+**Integrantes**
+- Nelson Lugo
+- Cristhian Zamora
+
+**Grupo**
+- E196
+
 Este proyecto consiste en el diseño y desarrollo de una **plataforma de Ride-Sharing**, inspirada en servicios como **Uber**, cuyo objetivo principal es conectar pasajeros y conductores de manera eficiente, segura y dinámica.
 
 El sistema será desarrollado utilizando **Python como lenguaje de backend**, aplicando progresivamente **patrones de software** y **buenas prácticas de arquitectura**, los cuales serán incorporados como avances durante todo el curso.
