@@ -54,3 +54,37 @@ def crear_viaje(datos: SolicitudViaje):
         "distancia": datos.distancia_km,
         "tarifa": tarifa
     }
+
+@app.post("/viaje-builder")
+def crear_viaje_builder(datos: SolicitudViaje):
+
+    if datos.tipo == "normal":
+        fabrica = FabricaViajeNormal()
+    else:
+        fabrica = FabricaViajePremium()
+
+    servicio_tarifa = fabrica.crear_servicio_tarifa(
+        datos.propina,
+        datos.descuento
+    )
+
+    tarifa = servicio_tarifa.calcular_tarifa(datos.distancia_km)
+
+    from builders.viaje_builder_concreto import ViajeBuilder
+
+    builder = ViajeBuilder()
+
+    viaje = (
+        builder
+        .agregar_distancia(datos.distancia_km)
+        .agregar_tarifa(tarifa)
+        .agregar_propina(datos.propina)
+        .construir()
+    )
+
+    return {
+        "distancia": viaje.distancia,
+        "tarifa": viaje.tarifa,
+        "propina": viaje.propina,
+        "total": viaje.total
+    }
