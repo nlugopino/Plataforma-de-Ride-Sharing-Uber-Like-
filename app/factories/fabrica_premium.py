@@ -3,5 +3,5 @@ from services.tarifa_premium import TarifaPremium
 
 class FabricaViajePremium(FabricaAbstractaViaje):
 
-    def crear_servicio_tarifa(self):
-        return TarifaPremium()
+    def crear_servicio_tarifa(self, propina=None, descuento=None):
+        return TarifaPremium(propina, descuento)

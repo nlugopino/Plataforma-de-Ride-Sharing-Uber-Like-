@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import Optional
 
 from factories.fabrica_normal import FabricaViajeNormal
 from factories.fabrica_premium import FabricaViajePremium
@@ -12,6 +13,8 @@ app = FastAPI()
 class SolicitudViaje(BaseModel):
     tipo: str
     distancia_km: float
+    propina: Optional[float] = None
+    descuento: Optional[float] = None
 
 
 @app.post("/viaje")
@@ -23,14 +26,12 @@ def crear_viaje(datos: SolicitudViaje):
     elif datos.tipo == "premium":
         fabrica = FabricaViajePremium()
 
-    else:
-        return {"error": "Tipo de viaje no válido"}
-
-    servicio_tarifa = fabrica.crear_servicio_tarifa()
+    servicio_tarifa = fabrica.crear_servicio_tarifa(
+        datos.propina,
+        datos.descuento
+    )
 
     tarifa = servicio_tarifa.calcular_tarifa(datos.distancia_km)
-
-    viaje = Viaje(datos.distancia_km, tarifa)
 
     return {
         "tipo": datos.tipo,
