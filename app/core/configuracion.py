@@ -1,16 +1,24 @@
-# Patrón Singleton - ¿Qué problema resuelve esta clase?
-# Hay valores globales como: tarifa base, precio por kilómetro.
-# Estos valores no deben duplicarse. Todos los servicios deben usar los mismos datos
+# Patrón Singleton
+# Esta clase garantiza que solo exista UNA instancia de configuración
+# para toda la aplicación. Así todos los servicios usan los mismos valores.
+
 class ConfiguracionApp:
 
     _instancia = None
 
     def __new__(cls):
-        # Si no existe una instancia, se crea por primera vez
+
+        # Si no existe instancia, se crea
         if cls._instancia is None:
+            print("🔴 [Singleton] Creando instancia única de ConfiguracionApp")
+
             cls._instancia = super(ConfiguracionApp, cls).__new__(cls)
-            # Valores de configuración compartidos por todo el sistema
+
+            # Valores compartidos en toda la aplicación
             cls._instancia.tarifa_base = 5000
             cls._instancia.precio_por_km = 2000
-        # Siempre se retorna la misma instancia
+
+        else:
+            print("🔴 [Singleton] Reutilizando instancia existente de ConfiguracionApp")
+
         return cls._instancia
