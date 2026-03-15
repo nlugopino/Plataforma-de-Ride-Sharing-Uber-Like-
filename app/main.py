@@ -31,6 +31,27 @@ def probar_singleton():
         "misma_instancia": id(config1) == id(config2)
     }
 
+@app.get("/test-factory")
+def probar_factory(tipo: str):
+
+    if tipo == "normal":
+        print("🟡 [Factory Method] Creando fábrica NORMAL")
+        fabrica = FabricaViajeNormal()
+
+    elif tipo == "premium":
+        print("🟡 [Factory Method] Creando fábrica PREMIUM")
+        fabrica = FabricaViajePremium()
+
+    else:
+        return {"error": "Tipo no válido"}
+
+    servicio = fabrica.crear_servicio_tarifa()
+
+    return {
+        "mensaje": f"Servicio creado para viaje {tipo}",
+        "tipo_servicio": type(servicio).__name__
+    }
+
 @app.post("/viaje")
 def crear_viaje(datos: SolicitudViaje):
 
