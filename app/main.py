@@ -7,6 +7,8 @@ from factories.fabrica_normal import FabricaViajeNormal
 from factories.fabrica_premium import FabricaViajePremium
 from models.viaje import Viaje
 from prototypes.configuracion_viaje import ConfiguracionViaje
+from adapters.adapter_mapa_a import AdapterMapaA
+from adapters.adapter_mapa_b import AdapterMapaB
 
 app = FastAPI()
 
@@ -133,4 +135,23 @@ def probar_prototype():
     return {
         "original": config_base.mostrar(),
         "clon": config_clon.mostrar()
+    }
+
+@app.get("/test-adapter")
+def probar_adapter(tipo: str):
+
+    if tipo == "a":
+        adapter = AdapterMapaA()
+
+    elif tipo == "b":
+        adapter = AdapterMapaB()
+
+    else:
+        return {"error": "Tipo no válido"}
+
+    tiempo = adapter.obtener_tiempo("A", "B")
+
+    return {
+        "tipo_servicio": tipo,
+        "tiempo_estimado": tiempo
     }
