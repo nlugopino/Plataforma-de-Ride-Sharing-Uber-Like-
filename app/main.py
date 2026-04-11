@@ -6,6 +6,7 @@ from core.configuracion import ConfiguracionApp
 from factories.fabrica_normal import FabricaViajeNormal
 from factories.fabrica_premium import FabricaViajePremium
 from models.viaje import Viaje
+from prototypes.configuracion_viaje import ConfiguracionViaje
 
 app = FastAPI()
 
@@ -108,4 +109,28 @@ def crear_viaje_builder(datos: SolicitudViaje):
         "tarifa": viaje.tarifa,
         "propina": viaje.propina,
         "total": viaje.total
+    }
+
+@app.get("/test-prototype")
+def probar_prototype():
+
+    # Configuración base
+    config_base = ConfiguracionViaje(
+        tipo="normal",
+        seguridad=False,
+        trafico="medio",
+        prioridad="baja"
+    )
+
+    # Clonar configuración
+    config_clon = config_base.clonar()
+
+    # Modificar clon (importante 🔥)
+    config_clon.tipo = "premium"
+    config_clon.seguridad = True
+    config_clon.prioridad = "alta"
+
+    return {
+        "original": config_base.mostrar(),
+        "clon": config_clon.mostrar()
     }
