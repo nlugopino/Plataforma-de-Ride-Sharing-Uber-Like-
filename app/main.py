@@ -9,6 +9,10 @@ from models.viaje import Viaje
 from prototypes.configuracion_viaje import ConfiguracionViaje
 from adapters.adapter_mapa_a import AdapterMapaA
 from adapters.adapter_mapa_b import AdapterMapaB
+from bridge.email import Email
+from bridge.sms import SMS
+from bridge.notificacion_viaje import NotificacionViaje
+from bridge.notificacion_emergencia import NotificacionEmergencia
 
 app = FastAPI()
 
@@ -154,4 +158,33 @@ def probar_adapter(tipo: str):
     return {
         "tipo_servicio": tipo,
         "tiempo_estimado": tiempo
+    }
+
+@app.get("/test-bridge")
+def probar_bridge(tipo: str, canal: str):
+
+    # Selección del canal
+    if canal == "email":
+        canal_obj = Email()
+    elif canal == "sms":
+        canal_obj = SMS()
+    else:
+        return {"error": "Canal no válido"}
+
+    # Selección del tipo de notificación
+    if tipo == "viaje":
+        notificacion = NotificacionViaje(canal_obj)
+        notificacion.enviar_inicio()
+
+    elif tipo == "emergencia":
+        notificacion = NotificacionEmergencia(canal_obj)
+        notificacion.enviar_alerta()
+
+    else:
+        return {"error": "Tipo no válido"}
+
+    return {
+        "tipo": tipo,
+        "canal": canal,
+        "mensaje": "Notificación enviada"
     }
