@@ -13,6 +13,10 @@ from bridge.email import Email
 from bridge.sms import SMS
 from bridge.notificacion_viaje import NotificacionViaje
 from bridge.notificacion_emergencia import NotificacionEmergencia
+from decorators.tarifa_base import TarifaBase
+from decorators.peaje import Peaje
+from decorators.nocturno import Nocturno
+from decorators.seguro import Seguro
 
 app = FastAPI()
 
@@ -187,4 +191,20 @@ def probar_bridge(tipo: str, canal: str):
         "tipo": tipo,
         "canal": canal,
         "mensaje": "Notificación enviada"
+    }
+
+@app.get("/test-decorator")
+def probar_decorator():
+
+    tarifa = TarifaBase(10000)
+
+    # Aplicar decoradores dinámicamente
+    tarifa = Peaje(tarifa)
+    tarifa = Nocturno(tarifa)
+    tarifa = Seguro(tarifa)
+
+    total = tarifa.calcular()
+
+    return {
+        "total": total
     }
