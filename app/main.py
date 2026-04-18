@@ -18,6 +18,8 @@ from decorators.peaje import Peaje
 from decorators.nocturno import Nocturno
 from decorators.seguro import Seguro
 from facade.facade_viaje import FacadeFinalizarViaje
+from composite.servicio_individual import ServicioIndividual
+from composite.paquete_servicios import PaqueteServicios
 
 app = FastAPI()
 
@@ -223,3 +225,24 @@ def probar_facade():
     resultado = facade.finalizar_viaje(viaje)
 
     return resultado
+
+@app.get("/test-composite")
+def probar_composite():
+
+    # Servicios individuales
+    viaje = ServicioIndividual("Viaje base", 10000)
+    seguro = ServicioIndividual("Seguro", 2000)
+    peaje = ServicioIndividual("Peaje", 3000)
+
+    # Crear paquete
+    paquete = PaqueteServicios("Paquete completo")
+
+    paquete.agregar(viaje)
+    paquete.agregar(seguro)
+    paquete.agregar(peaje)
+
+    total = paquete.calcular_costo()
+
+    return {
+        "total": total
+    }
