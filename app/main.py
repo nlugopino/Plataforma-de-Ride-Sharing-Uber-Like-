@@ -17,6 +17,7 @@ from decorators.tarifa_base import TarifaBase
 from decorators.peaje import Peaje
 from decorators.nocturno import Nocturno
 from decorators.seguro import Seguro
+from facade.facade_viaje import FacadeFinalizarViaje
 
 app = FastAPI()
 
@@ -208,3 +209,17 @@ def probar_decorator():
     return {
         "total": total
     }
+
+@app.get("/test-facade")
+def probar_facade():
+
+    viaje = {
+        "id": 1,
+        "total": 20000
+    }
+
+    facade = FacadeFinalizarViaje()
+
+    resultado = facade.finalizar_viaje(viaje)
+
+    return resultado
