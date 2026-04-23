@@ -48,6 +48,10 @@ class TarifaRequest(BaseModel):
     costo_base: int
     extras: List[str]  # ["peaje", "nocturno", "seguro"]
 
+class ViajeRequest(BaseModel):
+    id: int
+    total: float
+
 @app.get("/test-singleton")
 def probar_singleton():
 
@@ -185,20 +189,6 @@ def probar_adapter(tipo: str):
         "tiempo_estimado": tiempo
     }
 
-@app.get("/test-facade")
-def probar_facade():
-
-    viaje = {
-        "id": 1,
-        "total": 20000
-    }
-
-    facade = FacadeFinalizarViaje()
-
-    resultado = facade.finalizar_viaje(viaje)
-
-    return resultado
-
 @app.get("/test-composite")
 def probar_composite():
 
@@ -271,4 +261,23 @@ def calcular_tarifa(request: TarifaRequest):
         "costo_base": request.costo_base,
         "extras": request.extras,
         "total": total
+    }
+
+# Facade
+@app.post("/viaje/finalizar")
+def finalizar_viaje(request: ViajeRequest):
+
+    viaje = {
+        "id": request.id,
+        "total": request.total
+    }
+
+    facade = FacadeFinalizarViaje()
+
+    resultado = facade.finalizar_viaje(viaje)
+
+    return {
+        "viaje_id": request.id,
+        "total": request.total,
+        "mensaje": resultado["estado"]
     }
