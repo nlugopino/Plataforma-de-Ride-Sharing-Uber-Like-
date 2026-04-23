@@ -52,6 +52,14 @@ class ViajeRequest(BaseModel):
     id: int
     total: float
 
+class ServicioRequest(BaseModel):
+    nombre: str
+    costo: int
+
+class PaqueteRequest(BaseModel):
+    nombre: str
+    servicios: List[ServicioRequest]
+
 @app.get("/test-singleton")
 def probar_singleton():
 
@@ -189,27 +197,6 @@ def probar_adapter(tipo: str):
         "tiempo_estimado": tiempo
     }
 
-@app.get("/test-composite")
-def probar_composite():
-
-    # Servicios individuales
-    viaje = ServicioIndividual("Viaje base", 10000)
-    seguro = ServicioIndividual("Seguro", 2000)
-    peaje = ServicioIndividual("Peaje", 3000)
-
-    # Crear paquete
-    paquete = PaqueteServicios("Paquete completo")
-
-    paquete.agregar(viaje)
-    paquete.agregar(seguro)
-    paquete.agregar(peaje)
-
-    total = paquete.calcular_costo()
-
-    return {
-        "total": total
-    }
-
 # Bridge
 @app.post("/notificacion/enviar")
 def enviar_notificacion(request: NotificacionRequest):
@@ -280,4 +267,22 @@ def finalizar_viaje(request: ViajeRequest):
         "viaje_id": request.id,
         "total": request.total,
         "mensaje": resultado["estado"]
+    }
+
+# Composite
+@app.post("/paquete/calcular")
+def calcular_paquete(request: PaqueteRequest):
+
+    paquete = PaqueteServicios(request.nombre)
+
+    for s in request.servicios:
+        servicio = ServicioIndividual(s.nombre, s.costo)
+        paquete.agregar(servicio)
+
+    total = paquete.calcular_costo()
+
+    return {
+        "paquete": request.nombre,
+        "servicios": request.servicios,
+        "total": total
     }

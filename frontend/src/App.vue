@@ -73,6 +73,13 @@ const toggleMenu = () => {
             Facade
           </button>
 
+          <button 
+            @click="$router.push('/composite'); toggleMenu()" 
+            class="p-3 text-left hover:bg-gray-100"
+          >
+            Composite
+          </button>
+
           <!-- Agrega más patrones aquí -->
           <!--
           <button @click="$router.push('/observer')">Observer</button>

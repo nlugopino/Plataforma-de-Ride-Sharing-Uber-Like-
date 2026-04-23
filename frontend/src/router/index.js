@@ -4,6 +4,7 @@ import MatchingView from "../components/MatchingView.vue";
 import BridgeView from "../components/BridgeView.vue";
 import DecoratorView from "../components/DecoratorView.vue";
 import FacadeView from "../components/FacadeView.vue";
+import CompositeView from "../components/CompositeView.vue";
 
 const routes = [
   {
@@ -25,6 +26,10 @@ const routes = [
   {
     path: "/facade",
     component: FacadeView
+  },
+  {
+    path: "/composite",
+    component: CompositeView
   }
 ];
 
