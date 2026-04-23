@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
@@ -22,6 +23,15 @@ from app.composite.servicio_individual import ServicioIndividual
 from app.composite.paquete_servicios import PaqueteServicios
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Modelo que define el body del request
 class SolicitudViaje(BaseModel):
@@ -29,6 +39,10 @@ class SolicitudViaje(BaseModel):
     distancia_km: float
     propina: Optional[float] = None
     descuento: Optional[float] = None
+
+class NotificacionRequest(BaseModel):
+    tipo: str
+    canal: str
 
 @app.get("/test-singleton")
 def probar_singleton():
@@ -245,4 +259,33 @@ def probar_composite():
 
     return {
         "total": total
+    }
+
+@app.post("/notificacion/enviar")
+def enviar_notificacion(request: NotificacionRequest):
+
+    # Canal
+    if request.canal == "email":
+        canal_obj = Email()
+    elif request.canal == "sms":
+        canal_obj = SMS()
+    else:
+        return {"error": "Canal no válido"}
+
+    # Tipo
+    if request.tipo == "viaje":
+        notificacion = NotificacionViaje(canal_obj)
+        notificacion.enviar_inicio()
+
+    elif request.tipo == "emergencia":
+        notificacion = NotificacionEmergencia(canal_obj)
+        notificacion.enviar_alerta()
+
+    else:
+        return {"error": "Tipo no válido"}
+
+    return {
+        "tipo": request.tipo,
+        "canal": request.canal,
+        "mensaje": "Notificación enviada correctamente"
     }

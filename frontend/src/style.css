@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+/* Forzar Notiflix dentro del "móvil" */
+#mobile-container .notiflix-notify {
+  position: absolute !important;
+  top: 10px;
+  right: 10px;
+  left: auto !important;
+  transform: none !important;
+}
