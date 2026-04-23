@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import MatchingView from "../components/MatchingView.vue";
 import BridgeView from "../components/BridgeView.vue";
+import DecoratorView from "../components/DecoratorView.vue";
 
 const routes = [
   {
@@ -15,6 +16,10 @@ const routes = [
   {
     path: "/bridge",
     component: BridgeView
+  },
+  {
+    path: "/decorator",
+    component: DecoratorView
   }
 ];
 

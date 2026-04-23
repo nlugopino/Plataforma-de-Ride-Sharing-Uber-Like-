@@ -1,7 +1,7 @@
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 from app.core.configuracion import ConfiguracionApp
 from app.factories.fabrica_normal import FabricaViajeNormal
@@ -43,6 +43,10 @@ class SolicitudViaje(BaseModel):
 class NotificacionRequest(BaseModel):
     tipo: str
     canal: str
+
+class TarifaRequest(BaseModel):
+    costo_base: int
+    extras: List[str]  # ["peaje", "nocturno", "seguro"]
 
 @app.get("/test-singleton")
 def probar_singleton():
@@ -181,51 +185,6 @@ def probar_adapter(tipo: str):
         "tiempo_estimado": tiempo
     }
 
-@app.get("/test-bridge")
-def probar_bridge(tipo: str, canal: str):
-
-    # Selección del canal
-    if canal == "email":
-        canal_obj = Email()
-    elif canal == "sms":
-        canal_obj = SMS()
-    else:
-        return {"error": "Canal no válido"}
-
-    # Selección del tipo de notificación
-    if tipo == "viaje":
-        notificacion = NotificacionViaje(canal_obj)
-        notificacion.enviar_inicio()
-
-    elif tipo == "emergencia":
-        notificacion = NotificacionEmergencia(canal_obj)
-        notificacion.enviar_alerta()
-
-    else:
-        return {"error": "Tipo no válido"}
-
-    return {
-        "tipo": tipo,
-        "canal": canal,
-        "mensaje": "Notificación enviada"
-    }
-
-@app.get("/test-decorator")
-def probar_decorator():
-
-    tarifa = TarifaBase(10000)
-
-    # Aplicar decoradores dinámicamente
-    tarifa = Peaje(tarifa)
-    tarifa = Nocturno(tarifa)
-    tarifa = Seguro(tarifa)
-
-    total = tarifa.calcular()
-
-    return {
-        "total": total
-    }
-
 @app.get("/test-facade")
 def probar_facade():
 
@@ -261,6 +220,7 @@ def probar_composite():
         "total": total
     }
 
+# Bridge
 @app.post("/notificacion/enviar")
 def enviar_notificacion(request: NotificacionRequest):
 
@@ -288,4 +248,27 @@ def enviar_notificacion(request: NotificacionRequest):
         "tipo": request.tipo,
         "canal": request.canal,
         "mensaje": "Notificación enviada correctamente"
+    }
+
+# Decorator
+@app.post("/tarifa/calcular")
+def calcular_tarifa(request: TarifaRequest):
+
+    tarifa = TarifaBase(request.costo_base)
+
+    # Aplicar decoradores dinámicamente
+    for extra in request.extras:
+        if extra == "peaje":
+            tarifa = Peaje(tarifa)
+        elif extra == "nocturno":
+            tarifa = Nocturno(tarifa)
+        elif extra == "seguro":
+            tarifa = Seguro(tarifa)
+
+    total = tarifa.calcular()
+
+    return {
+        "costo_base": request.costo_base,
+        "extras": request.extras,
+        "total": total
     }
