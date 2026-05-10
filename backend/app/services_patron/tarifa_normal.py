@@ -1,6 +1,6 @@
-from app.services.servicio_tarifa import ServicioTarifa
+from app.services_patron.servicio_tarifa import ServicioTarifa
 
-class TarifaPremium(ServicioTarifa):
+class TarifaNormal(ServicioTarifa):
 
     def __init__(self, propina=None, descuento=None):
         self.propina = propina
@@ -8,7 +8,7 @@ class TarifaPremium(ServicioTarifa):
 
     def calcular_tarifa(self, distancia_km: float):
 
-        tarifa = 8000 + (distancia_km * 3000)
+        tarifa = 5000 + (distancia_km * 2000)
 
         if self.descuento:
             tarifa -= self.descuento

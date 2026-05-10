@@ -7,6 +7,10 @@ import HomeView from "../views/HomeView.vue";
 import PasajeroView from "../views/personas/PasajeroView.vue";
 import ConductorView from "../views/personas/ConductorView.vue";
 
+/* SERVICIOS */
+import ServicioPasajeroView from "../views/servicios/ServicioPasajeroView.vue";
+import ServicioConductorView from "../views/servicios/ServicioConductorView.vue";
+
 /* PATRONES */
 import BridgeView from "../views/patrones/BridgeView.vue";
 import DecoratorView from "../views/patrones/DecoratorView.vue";
@@ -27,6 +31,16 @@ const routes = [
   {
     path: "/conductor",
     component: ConductorView
+  },
+
+  /* SERVICIOS */
+  {
+    path: "/servicio-pasajero",
+    component: ServicioPasajeroView
+  },
+  {
+    path: "/servicio-conductor",
+    component: ServicioConductorView
   },
 
   /* PATRONES */

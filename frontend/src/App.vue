@@ -5,6 +5,7 @@ const isOpen = ref(false);
 
 const personasOpen = ref(false);
 const patronesOpen = ref(false);
+const serviciosOpen = ref(false);
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value;
@@ -101,6 +102,40 @@ const toggleMenu = () => {
 
               <button
                 @click="$router.push('/conductor'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Conductor
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- SERVICIOS -->
+          <div>
+
+            <button
+              @click="serviciosOpen = !serviciosOpen"
+              class="w-full text-left p-3 rounded hover:bg-gray-100 flex justify-between"
+            >
+              <span>🚖 Servicios</span>
+              <span>{{ serviciosOpen ? '−' : '+' }}</span>
+            </button>
+
+            <div
+              v-if="serviciosOpen"
+              class="ml-4 flex flex-col"
+            >
+
+              <button
+                @click="$router.push('/servicio-pasajero'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Pasajero
+              </button>
+
+              <button
+                @click="$router.push('/servicio-conductor'); toggleMenu()"
                 class="text-left p-2 hover:bg-gray-100 rounded"
               >
                 Conductor

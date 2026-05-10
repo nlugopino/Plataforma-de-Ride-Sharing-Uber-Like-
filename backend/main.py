@@ -28,10 +28,12 @@ from app.database.connection import engine, Base
 from app.models.pasajero import Pasajero
 from app.models.conductor import Conductor
 from app.models.vehiculo import Vehiculo
+from app.models.servicio import Servicio
 
 # IMPORTAR RUTAS
 from app.routes.pasajero_routes import router as pasajero_router
 from app.routes.conductor_routes import router as conductor_router
+from app.routes.servicio_routes import router as servicio_router
 
 # CREAR TABLAS
 Base.metadata.create_all(bind=engine)
@@ -49,6 +51,7 @@ app.add_middleware(
 
 app.include_router(pasajero_router)
 app.include_router(conductor_router)
+app.include_router(servicio_router)
 
 # Modelo que define el body del request
 class SolicitudViaje(BaseModel):

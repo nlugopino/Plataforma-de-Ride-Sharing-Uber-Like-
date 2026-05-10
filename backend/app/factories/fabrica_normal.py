@@ -1,5 +1,5 @@
 from app.factories.abstract_factory import FabricaAbstractaViaje
-from app.services.tarifa_normal import TarifaNormal
+from app.services_patron.tarifa_normal import TarifaNormal
 
 class FabricaViajeNormal(FabricaAbstractaViaje):
 
