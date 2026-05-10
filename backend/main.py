@@ -6,7 +6,7 @@ from typing import Optional, List
 from app.core.configuracion import ConfiguracionApp
 from app.factories.fabrica_normal import FabricaViajeNormal
 from app.factories.fabrica_premium import FabricaViajePremium
-from app.models.viaje import Viaje
+from app.models_patron.viaje import Viaje
 from app.prototypes.configuracion_viaje import ConfiguracionViaje
 from app.adapters.adapter_mapa_a import AdapterMapaA
 from app.adapters.adapter_mapa_b import AdapterMapaB
@@ -22,6 +22,20 @@ from app.facade.facade_viaje import FacadeFinalizarViaje
 from app.composite.servicio_individual import ServicioIndividual
 from app.composite.paquete_servicios import PaqueteServicios
 
+from app.database.connection import engine, Base
+
+# IMPORTAR MODELOS
+from app.models.pasajero import Pasajero
+from app.models.conductor import Conductor
+from app.models.vehiculo import Vehiculo
+
+# IMPORTAR RUTAS
+from app.routes.pasajero_routes import router as pasajero_router
+from app.routes.conductor_routes import router as conductor_router
+
+# CREAR TABLAS
+Base.metadata.create_all(bind=engine)
+
 app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
@@ -32,6 +46,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(pasajero_router)
+app.include_router(conductor_router)
 
 # Modelo que define el body del request
 class SolicitudViaje(BaseModel):

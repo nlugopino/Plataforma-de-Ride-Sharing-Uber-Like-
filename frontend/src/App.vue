@@ -3,92 +3,167 @@ import { ref } from "vue";
 
 const isOpen = ref(false);
 
+const personasOpen = ref(false);
+const patronesOpen = ref(false);
+
 const toggleMenu = () => {
   isOpen.value = !isOpen.value;
 };
 </script>
 
 <template>
+
   <div class="min-h-screen bg-gray-100 flex items-center justify-center">
-    
-    <div id="mobile-container" class="w-[360px] h-[640px] bg-white rounded-2xl shadow overflow-hidden relative">
+
+    <!-- CELULAR -->
+    <div
+      class="w-[360px] h-[640px] bg-white rounded-2xl shadow overflow-hidden relative"
+    >
 
       <!-- HEADER -->
       <div class="flex items-center justify-between p-3 border-b">
-        <button @click="toggleMenu" class="text-xl">
+
+        <button
+          @click="toggleMenu"
+          class="text-xl"
+        >
           ☰
         </button>
-        <span class="font-bold">App Ride Sharing</span>
+
+        <span class="font-bold">
+          Ride Sharing
+        </span>
+
         <div></div>
+
       </div>
 
       <!-- CONTENIDO -->
-      <div class="p-4 overflow-auto h-[calc(100%-48px)]">
+      <div class="h-[calc(100%-56px)] overflow-auto p-4">
         <router-view />
       </div>
 
       <!-- OVERLAY -->
-      <div 
+      <div
         v-if="isOpen"
         @click="toggleMenu"
         class="absolute inset-0 bg-black bg-opacity-30"
       ></div>
 
       <!-- DRAWER -->
-      <div 
-        class="absolute top-0 left-0 h-full w-56 bg-white shadow transform transition-transform"
+      <div
+        class="absolute top-0 left-0 h-full w-64 bg-white shadow transition-transform duration-300 z-50"
         :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
       >
-        <div class="p-4 font-bold border-b">
-          Menú
+
+        <!-- TITLE -->
+        <div class="p-4 border-b">
+
+          <h2 class="font-bold text-lg">
+            🚖 Menú
+          </h2>
+
         </div>
 
-        <nav class="flex flex-col text-sm">
-          
-          <button 
-            @click="$router.push('/matching'); toggleMenu()" 
-            class="p-3 text-left hover:bg-gray-100"
+        <!-- NAV -->
+        <div class="p-2 text-sm">
+
+          <!-- HOME -->
+          <button
+            @click="$router.push('/'); toggleMenu()"
+            class="w-full text-left p-3 rounded hover:bg-gray-100"
           >
-            Matching
+            🏠 Inicio
           </button>
 
-          <button 
-            @click="$router.push('/bridge'); toggleMenu()" 
-            class="p-3 text-left hover:bg-gray-100"
-          >
-            Bridge
-          </button>
+          <!-- PERSONAS -->
+          <div>
 
-          <button 
-            @click="$router.push('/decorator'); toggleMenu()" 
-            class="p-3 text-left hover:bg-gray-100"
-          >
-            Decorator
-          </button>
+            <button
+              @click="personasOpen = !personasOpen"
+              class="w-full text-left p-3 rounded hover:bg-gray-100 flex justify-between"
+            >
+              <span>👥 Personas</span>
+              <span>{{ personasOpen ? '−' : '+' }}</span>
+            </button>
 
-          <button 
-            @click="$router.push('/facade'); toggleMenu()" 
-            class="p-3 text-left hover:bg-gray-100"
-          >
-            Facade
-          </button>
+            <div
+              v-if="personasOpen"
+              class="ml-4 flex flex-col"
+            >
 
-          <button 
-            @click="$router.push('/composite'); toggleMenu()" 
-            class="p-3 text-left hover:bg-gray-100"
-          >
-            Composite
-          </button>
+              <button
+                @click="$router.push('/pasajero'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Pasajero
+              </button>
 
-          <!-- Agrega más patrones aquí -->
-          <!--
-          <button @click="$router.push('/observer')">Observer</button>
-          -->
+              <button
+                @click="$router.push('/conductor'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Conductor
+              </button>
 
-        </nav>
+            </div>
+
+          </div>
+
+          <!-- PATRONES -->
+          <div>
+
+            <button
+              @click="patronesOpen = !patronesOpen"
+              class="w-full text-left p-3 rounded hover:bg-gray-100 flex justify-between"
+            >
+              <span>🧠 Patrones</span>
+              <span>{{ patronesOpen ? '−' : '+' }}</span>
+            </button>
+
+            <div
+              v-if="patronesOpen"
+              class="ml-4 flex flex-col"
+            >
+
+              <button
+                @click="$router.push('/bridge'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Bridge
+              </button>
+
+              <button
+                @click="$router.push('/decorator'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Decorator
+              </button>
+
+              <button
+                @click="$router.push('/facade'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Facade
+              </button>
+
+              <button
+                @click="$router.push('/composite'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Composite
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
     </div>
 
   </div>
+
 </template>

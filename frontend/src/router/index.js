@@ -1,20 +1,35 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import MatchingView from "../components/MatchingView.vue";
-import BridgeView from "../components/BridgeView.vue";
-import DecoratorView from "../components/DecoratorView.vue";
-import FacadeView from "../components/FacadeView.vue";
-import CompositeView from "../components/CompositeView.vue";
+/* HOME */
+import HomeView from "../views/HomeView.vue";
+
+/* PERSONAS */
+import PasajeroView from "../views/personas/PasajeroView.vue";
+import ConductorView from "../views/personas/ConductorView.vue";
+
+/* PATRONES */
+import BridgeView from "../views/patrones/BridgeView.vue";
+import DecoratorView from "../views/patrones/DecoratorView.vue";
+import FacadeView from "../views/patrones/FacadeView.vue";
+import CompositeView from "../views/patrones/CompositeView.vue";
 
 const routes = [
   {
     path: "/",
-    redirect: "/matching"
+    component: HomeView
+  },
+
+  /* PERSONAS */
+  {
+    path: "/pasajero",
+    component: PasajeroView
   },
   {
-    path: "/matching",
-    component: MatchingView
+    path: "/conductor",
+    component: ConductorView
   },
+
+  /* PATRONES */
   {
     path: "/bridge",
     component: BridgeView
