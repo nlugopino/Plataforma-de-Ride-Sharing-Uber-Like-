@@ -10,7 +10,8 @@ from app.models.conductor import Conductor
 
 from app.schemas.servicio_schema import (
     ServicioCreate,
-    ServicioResponse
+    ServicioResponse,
+    CalificacionRequest
 )
 
 from app.services.facade.facade_servicio import FacadeServicio
@@ -152,3 +153,62 @@ def finalizar(
         db,
         servicio
     )
+
+@router.post("/servicios/{servicio_id}/calificar")
+def calificar_servicio(
+    servicio_id: int,
+    data: CalificacionRequest,
+    db: Session = Depends(get_db)
+):
+
+    servicio = db.query(Servicio).filter(
+        Servicio.id == servicio_id
+    ).first()
+
+    if not servicio:
+        raise HTTPException(
+            status_code=404,
+            detail="Servicio no encontrado"
+        )
+
+    if servicio.estado != "finalizado":
+        raise HTTPException(
+            status_code=400,
+            detail="Solo se pueden calificar viajes finalizados"
+        )
+
+    if servicio.calificacion is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Este viaje ya fue calificado"
+        )
+
+    if data.calificacion < 1 or data.calificacion > 5:
+        raise HTTPException(
+            status_code=400,
+            detail="La calificación debe estar entre 1 y 5"
+        )
+
+    servicio.calificacion = data.calificacion
+    servicio.comentario_calificacion = data.comentario
+
+    db.commit()
+    db.refresh(servicio)
+
+    return {
+        "mensaje": "Calificación registrada"
+    }
+
+@router.get("/servicios/historial/{pasajero_id}",
+response_model=list[ServicioResponse])
+def historial_viajes(
+    pasajero_id: int,
+    db: Session = Depends(get_db)
+):
+
+    servicios = db.query(Servicio).filter(
+        Servicio.pasajero_id == pasajero_id,
+        Servicio.estado == "finalizado"
+    ).all()
+
+    return servicios

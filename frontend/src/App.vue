@@ -141,6 +141,13 @@ const toggleMenu = () => {
                 Conductor
               </button>
 
+              <button
+                @click="$router.push('/historial-viajes'); toggleMenu()"
+                class="text-left p-2 hover:bg-gray-100 rounded"
+              >
+                Historial Viajes
+              </button>
+
             </div>
 
           </div>

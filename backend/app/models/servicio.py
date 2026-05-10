@@ -33,6 +33,10 @@ class Servicio(Base):
 
     fecha_finalizacion = Column(DateTime, nullable=True)
 
+    calificacion = Column(Integer, nullable=True)
+
+    comentario_calificacion = Column(String, nullable=True)
+
     pasajero_id = Column(
         Integer,
         ForeignKey("pasajeros.id")

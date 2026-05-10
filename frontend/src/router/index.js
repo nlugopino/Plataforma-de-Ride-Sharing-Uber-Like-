@@ -10,6 +10,7 @@ import ConductorView from "../views/personas/ConductorView.vue";
 /* SERVICIOS */
 import ServicioPasajeroView from "../views/servicios/ServicioPasajeroView.vue";
 import ServicioConductorView from "../views/servicios/ServicioConductorView.vue";
+import HistorialViajesView from "../views/servicios/HistorialViajesView.vue";
 
 /* PATRONES */
 import BridgeView from "../views/patrones/BridgeView.vue";
@@ -41,6 +42,10 @@ const routes = [
   {
     path: "/servicio-conductor",
     component: ServicioConductorView
+  },
+  {
+    path: "/historial-viajes",
+    component: HistorialViajesView
   },
 
   /* PATRONES */

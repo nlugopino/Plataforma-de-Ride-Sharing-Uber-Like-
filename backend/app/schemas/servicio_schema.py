@@ -36,5 +36,13 @@ class ServicioResponse(BaseModel):
 
     conductor_id: Optional[int]
 
+    calificacion: Optional[int] = None
+
+    comentario_calificacion: Optional[str] = None
+
     class Config:
         from_attributes = True
+
+class CalificacionRequest(BaseModel):
+    calificacion: int
+    comentario: Optional[str] = None
