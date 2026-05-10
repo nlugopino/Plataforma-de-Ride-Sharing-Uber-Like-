@@ -1,5 +1,14 @@
 <template>
   <div class="relative">
+    <div class="bg-yellow-100 border border-yellow-300 p-3 rounded mb-4">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="font-bold">🏆 Nivel {{ nivel }}</p>
+
+          <p class="text-sm">⭐ {{ puntos }} puntos acumulados</p>
+        </div>
+      </div>
+    </div>
     <div
       v-if="toast"
       class="absolute top-3 right-3 px-4 py-2 rounded shadow text-white text-sm z-50"
@@ -33,6 +42,28 @@
           <div class="flex justify-between">
             <span>Distancia</span>
             <strong>{{ servicioActivo.distancia_km }} km</strong>
+          </div>
+        </div>
+
+        <div class="mt-3 bg-green-50 p-2 rounded">
+          <div class="flex justify-between">
+            <span>Oferta original</span>
+            <strong> $ {{ servicioActivo.valor_oferta }} </strong>
+          </div>
+
+          <div class="flex justify-between">
+            <span>Descuento</span>
+            <strong class="text-green-600">
+              - $ {{ servicioActivo.descuento_aplicado }}
+            </strong>
+          </div>
+
+          <div class="flex justify-between mt-2">
+            <span>Total final</span>
+
+            <strong class="text-blue-600">
+              $ {{ servicioActivo.total_final }}
+            </strong>
           </div>
         </div>
 
@@ -94,6 +125,19 @@
           class="border p-2 rounded"
         />
 
+        <div
+          v-if="servicioActivo?.promociones"
+          class="flex flex-wrap gap-2 mt-2"
+        >
+          <span
+            v-for="promo in servicioActivo.promociones.split(',')"
+            :key="promo"
+            class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs"
+          >
+            {{ promo }}
+          </span>
+        </div>
+
         <button
           @click="calcularDistancia"
           class="bg-gray-500 text-white p-2 rounded"
@@ -135,6 +179,10 @@ const toastType = ref("success");
 
 const servicioActivo = ref(null);
 
+const puntos = ref(0);
+
+const nivel = ref("Bronce");
+
 const mostrarModalReporte = ref(false);
 
 const tieneReporte = ref(false);
@@ -163,6 +211,18 @@ const showToast = (msg, type = "success") => {
 
 const calcularDistancia = () => {
   form.distancia_km = Math.floor(Math.random() * 16) + 5;
+};
+
+const obtenerPuntos = async () => {
+  const res = await fetch("http://localhost:8000/pasajeros/puntos");
+
+  if (!res.ok) return;
+
+  const data = await res.json();
+
+  puntos.value = data.puntos;
+
+  nivel.value = data.nivel;
 };
 
 const obtenerServicio = async () => {
@@ -247,5 +307,7 @@ const verificarReporte = async () => {
 
 onMounted(() => {
   obtenerServicio();
+
+  obtenerPuntos();
 });
 </script>

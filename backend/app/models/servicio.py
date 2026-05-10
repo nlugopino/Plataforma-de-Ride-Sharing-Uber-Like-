@@ -37,6 +37,12 @@ class Servicio(Base):
 
     comentario_calificacion = Column(String, nullable=True)
 
+    descuento_aplicado = Column(Float, default=0)
+
+    promociones = Column(String, nullable=True)
+
+    total_final = Column(Float, default=0)
+
     pasajero_id = Column(
         Integer,
         ForeignKey("pasajeros.id")

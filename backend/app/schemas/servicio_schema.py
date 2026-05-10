@@ -40,6 +40,12 @@ class ServicioResponse(BaseModel):
 
     comentario_calificacion: Optional[str] = None
 
+    descuento_aplicado: float
+
+    promociones: Optional[str] = None
+
+    total_final: float
+
     class Config:
         from_attributes = True
 

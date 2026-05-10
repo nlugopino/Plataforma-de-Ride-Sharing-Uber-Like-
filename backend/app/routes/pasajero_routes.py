@@ -61,3 +61,15 @@ def obtener_pasajero(
         )
 
     return pasajero
+
+@router.get("/pasajeros/puntos")
+def puntos_pasajero(
+    db: Session = Depends(get_db)
+):
+
+    pasajero = db.query(Pasajero).first()
+
+    return {
+        "puntos": pasajero.puntos,
+        "nivel": pasajero.nivel
+    }
