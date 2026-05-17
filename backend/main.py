@@ -36,6 +36,7 @@ from app.routes.pasajero_routes import router as pasajero_router
 from app.routes.conductor_routes import router as conductor_router
 from app.routes.servicio_routes import router as servicio_router
 from app.routes.reporte_routes import router as reporte_router
+from app.routes.notificacion_routes import router as notificacion_router
 
 # CREAR TABLAS
 Base.metadata.create_all(bind=engine)
@@ -55,6 +56,7 @@ app.include_router(pasajero_router)
 app.include_router(conductor_router)
 app.include_router(servicio_router)
 app.include_router(reporte_router)
+app.include_router(notificacion_router)
 
 # Modelo que define el body del request
 class SolicitudViaje(BaseModel):

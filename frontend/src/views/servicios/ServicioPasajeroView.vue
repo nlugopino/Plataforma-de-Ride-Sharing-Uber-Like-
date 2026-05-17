@@ -9,6 +9,20 @@
         </div>
       </div>
     </div>
+
+    <div
+      v-if="notificacion"
+      class="bg-blue-100 border border-blue-300 p-3 rounded mb-4"
+    >
+
+      <p class="text-sm">
+
+        🔔 {{ notificacion }}
+
+      </p>
+
+    </div>
+
     <div
       v-if="toast"
       class="absolute top-3 right-3 px-4 py-2 rounded shadow text-white text-sm z-50"
@@ -183,6 +197,8 @@ const puntos = ref(0);
 
 const nivel = ref("Bronce");
 
+const notificacion = ref(null);
+
 const mostrarModalReporte = ref(false);
 
 const tieneReporte = ref(false);
@@ -223,6 +239,19 @@ const obtenerPuntos = async () => {
   puntos.value = data.puntos;
 
   nivel.value = data.nivel;
+};
+
+const obtenerNotificacion = async () => {
+
+  const res = await fetch(
+    "http://localhost:8000/notificaciones"
+  );
+
+  if (!res.ok) return;
+
+  const data = await res.json();
+
+  notificacion.value = data.mensaje;
 };
 
 const obtenerServicio = async () => {
@@ -306,8 +335,11 @@ const verificarReporte = async () => {
 };
 
 onMounted(() => {
+
   obtenerServicio();
 
   obtenerPuntos();
+
+  obtenerNotificacion();
 });
 </script>

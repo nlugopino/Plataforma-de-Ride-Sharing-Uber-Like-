@@ -6,10 +6,18 @@ from app.decorators.promocion_nocturna import PromocionNocturna
 from app.models.servicio import Servicio
 from app.models.pasajero import Pasajero
 from app.builders.nivel_builder import NivelBuilder
+from app.observer.servicio_subject import ServicioSubject
+from app.observer.notificacion_observer import NotificacionObserver
 
 class FacadeServicio:
 
     nivel_builder = NivelBuilder()
+
+    subject = ServicioSubject()
+
+    observer = NotificacionObserver()
+
+    subject.attach(observer)
 
     def solicitar(
         self,
@@ -119,6 +127,10 @@ class FacadeServicio:
 
         db.refresh(servicio)
 
+        self.subject.notify(
+            "Tu viaje fue aceptado"
+        )
+
         return servicio
 
     def finalizar(
@@ -151,6 +163,10 @@ class FacadeServicio:
 
         db.refresh(servicio)
 
+        self.subject.notify(
+            "Tu viaje finalizó correctamente"
+        )
+
         return {
             "mensaje": "Servicio finalizado",
             "puntos_ganados": puntos_ganados,
@@ -168,5 +184,9 @@ class FacadeServicio:
         db.commit()
 
         db.refresh(servicio)
+
+        self.subject.notify(
+            "El viaje fue cancelado"
+        )
 
         return servicio
