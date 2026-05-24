@@ -52,6 +52,13 @@
           {{ servicioActivo.direccion_destino }}
         </p>
 
+        <p>
+          Método pago:
+          <strong>
+            {{ servicioActivo.metodo_pago }}
+          </strong>
+        </p>
+
         <div class="mt-3 bg-gray-100 p-2 rounded">
           <div class="flex justify-between">
             <span>Distancia</span>
@@ -139,6 +146,23 @@
           class="border p-2 rounded"
         />
 
+        <select
+          v-model="form.metodo_pago"
+          class="border p-2 rounded"
+        >
+          <option value="efectivo">
+            💵 Efectivo
+          </option>
+
+          <option value="tarjeta">
+            💳 Tarjeta
+          </option>
+
+          <option value="wallet">
+            📱 Wallet
+          </option>
+        </select>
+
         <div
           v-if="servicioActivo?.promociones"
           class="flex flex-wrap gap-2 mt-2"
@@ -205,14 +229,11 @@ const tieneReporte = ref(false);
 
 const form = reactive({
   direccion_origen: "",
-
   direccion_destino: "",
-
   tipo_servicio: "viaje",
-
   distancia_km: 0,
-
   valor_oferta: 0,
+  metodo_pago: "efectivo"
 });
 
 const showToast = (msg, type = "success") => {

@@ -8,6 +8,10 @@ from app.models.pasajero import Pasajero
 from app.builders.nivel_builder import NivelBuilder
 from app.observer.servicio_subject import ServicioSubject
 from app.observer.notificacion_observer import NotificacionObserver
+from app.strategy.pago_efectivo import PagoEfectivo
+from app.strategy.pago_tarjeta import PagoTarjeta
+from app.strategy.pago_wallet import PagoWallet
+from app.strategy.procesador_pago import ProcesadorPago
 
 class FacadeServicio:
 
@@ -84,24 +88,16 @@ class FacadeServicio:
         descuento = valor_original - total_final
 
         servicio = Servicio(
-
             direccion_origen=data.direccion_origen,
-
             direccion_destino=data.direccion_destino,
-
             tipo_servicio=data.tipo_servicio,
-
             distancia_km=data.distancia_km,
-
             valor_oferta=data.valor_oferta,
-
             descuento_aplicado=descuento,
-
             promociones=", ".join(promociones_activas),
-
             total_final=total_final,
-
-            pasajero_id=pasajero_id
+            pasajero_id=pasajero_id,
+            metodo_pago=data.metodo_pago
         )
 
         db.add(servicio)
@@ -138,6 +134,25 @@ class FacadeServicio:
         db,
         servicio
     ):
+        
+        strategy = None
+
+        if servicio.metodo_pago == "efectivo":
+            strategy = PagoEfectivo()
+
+        elif servicio.metodo_pago == "tarjeta":
+            strategy = PagoTarjeta()
+
+        elif servicio.metodo_pago == "wallet":
+            strategy = PagoWallet()
+
+        procesador = ProcesadorPago(strategy)
+
+        resultado_pago = procesador.procesar(
+            servicio.total_final
+        )
+
+        print(resultado_pago)
 
         servicio.estado = "finalizado"
 
