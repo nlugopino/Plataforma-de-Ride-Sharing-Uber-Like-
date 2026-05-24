@@ -115,6 +115,35 @@
           Reporte enviado
         </div>
       </div>
+
+      <div
+        v-if="servicioActivo.estado === 'aceptado'"
+        class="grid grid-cols-1 gap-2 mt-4"
+      >
+
+        <button
+          @click="ejecutarAccion('emergencia')"
+          class="bg-red-500 text-white p-2 rounded"
+        >
+          🚨 Emergencia
+        </button>
+
+        <button
+          @click="ejecutarAccion('ubicacion')"
+          class="bg-blue-500 text-white p-2 rounded"
+        >
+          📍 Compartir
+        </button>
+
+        <button
+          @click="ejecutarAccion('contacto')"
+          class="bg-green-500 text-white p-2 rounded"
+        >
+          📞 Contactar
+        </button>
+
+      </div>
+
     </div>
 
     <div v-else>
@@ -335,6 +364,28 @@ const cancelar = async () => {
   form.direccion_destino = "";
 
   showToast("Servicio cancelado");
+};
+
+const ejecutarAccion = async (tipo) => {
+  console.log("acaaa");
+  
+  const res = await fetch(
+    `http://localhost:8000/acciones/${tipo}`,
+    {
+      method: "POST"
+    }
+  );
+
+  if (!res.ok) {
+
+    showToast("Error", "error");
+
+    return;
+  }
+
+  const data = await res.json();
+
+  showToast(data.mensaje);
 };
 
 const verificarReporte = async () => {

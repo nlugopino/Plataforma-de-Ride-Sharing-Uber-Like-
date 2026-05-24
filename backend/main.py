@@ -30,6 +30,7 @@ from app.models.conductor import Conductor
 from app.models.vehiculo import Vehiculo
 from app.models.servicio import Servicio
 from app.models.reporte_incidente import ReporteIncidente
+from app.routes.acciones_routes import router as acciones_router
 
 # IMPORTAR RUTAS
 from app.routes.pasajero_routes import router as pasajero_router
@@ -57,6 +58,7 @@ app.include_router(conductor_router)
 app.include_router(servicio_router)
 app.include_router(reporte_router)
 app.include_router(notificacion_router)
+app.include_router(acciones_router)
 
 # Modelo que define el body del request
 class SolicitudViaje(BaseModel):
