@@ -1,4 +1,5 @@
 from datetime import datetime
+from app.state.servicio_context import ServicioContext
 from app.decorators.tarifa_base import TarifaBase
 from app.decorators.promocion_primer_viaje import PromocionPrimerViaje
 from app.decorators.promocion_fin_semana import PromocionFinSemana
@@ -115,7 +116,9 @@ class FacadeServicio:
         conductor_id
     ):
 
-        servicio.estado = "aceptado"
+        context = ServicioContext(servicio)
+
+        context.aceptar()
 
         servicio.conductor_id = conductor_id
 
@@ -154,7 +157,9 @@ class FacadeServicio:
 
         print(resultado_pago)
 
-        servicio.estado = "finalizado"
+        context = ServicioContext(servicio)
+
+        context.finalizar()
 
         servicio.fecha_finalizacion = datetime.utcnow()
 
@@ -194,7 +199,9 @@ class FacadeServicio:
         servicio
     ):
 
-        servicio.estado = "cancelado"
+        context = ServicioContext(servicio)
+
+        context.cancelar()
 
         db.commit()
 

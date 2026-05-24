@@ -88,8 +88,16 @@ def cancelar(
             detail="Servicio no encontrado"
         )
 
-    return facade.cancelar(db, servicio)
+    try : 
 
+        return facade.cancelar(db, servicio)
+    
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
 # LISTADO CONDUCTOR
 @router.get("/servicios/disponibles")
@@ -131,11 +139,20 @@ def aceptar(
         Servicio.id == id_servicio
     ).first()
 
-    return facade.aceptar(
-        db,
-        servicio,
-        conductor.id
-    )
+    try:
+
+        return facade.aceptar(
+            db,
+            servicio,
+            conductor.id
+        )
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
 
 # FINALIZAR
@@ -149,10 +166,19 @@ def finalizar(
         Servicio.id == id_servicio
     ).first()
 
-    return facade.finalizar(
-        db,
-        servicio
-    )
+    try :
+
+        return facade.finalizar(
+            db,
+            servicio
+        )
+    
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
 @router.post("/servicios/{servicio_id}/calificar")
 def calificar_servicio(
