@@ -337,7 +337,13 @@ const solicitar = async () => {
   });
 
   if (!res.ok) {
-    showToast("Error", "error");
+
+    const error = await res.json();
+
+    showToast(
+      error.detail,
+      "error"
+    );
 
     return;
   }

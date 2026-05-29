@@ -13,6 +13,10 @@ from app.strategy.pago_efectivo import PagoEfectivo
 from app.strategy.pago_tarjeta import PagoTarjeta
 from app.strategy.pago_wallet import PagoWallet
 from app.strategy.procesador_pago import ProcesadorPago
+from app.chain.validar_pasajero import ValidarPasajero
+from app.chain.validar_distancia import ValidarDistancia
+from app.chain.validar_oferta import ValidarOferta
+from app.chain.validar_conductor import ValidarConductor
 
 class FacadeServicio:
 
@@ -30,6 +34,11 @@ class FacadeServicio:
         data,
         pasajero_id
     ):
+        cadena = ValidarPasajero()
+
+        cadena.set_next(ValidarConductor()).set_next(ValidarDistancia()).set_next(ValidarOferta())
+
+        cadena.handle(data, db)
 
         tarifa = TarifaBase(data.valor_oferta)
 

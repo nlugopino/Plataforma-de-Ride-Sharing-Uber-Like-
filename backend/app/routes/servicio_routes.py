@@ -46,11 +46,20 @@ def crear_servicio(
             detail="No existe pasajero"
         )
 
-    servicio = facade.solicitar(
-        db,
-        data,
-        pasajero.id
-    )
+    try:
+
+        servicio = facade.solicitar(
+            db,
+            data,
+            pasajero.id
+        )
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
     return servicio
 
