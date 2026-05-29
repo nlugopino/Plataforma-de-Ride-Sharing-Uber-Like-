@@ -41,3 +41,7 @@ class Servicio(Base):
     )
     pasajero = relationship("Pasajero")
     conductor = relationship("Conductor")
+    tipo_comprobante = Column(
+        String,
+        nullable=True
+    )

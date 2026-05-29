@@ -14,13 +14,7 @@
       v-if="notificacion"
       class="bg-blue-100 border border-blue-300 p-3 rounded mb-4"
     >
-
-      <p class="text-sm">
-
-        🔔 {{ notificacion }}
-
-      </p>
-
+      <p class="text-sm">🔔 {{ notificacion }}</p>
     </div>
 
     <div
@@ -120,7 +114,6 @@
         v-if="servicioActivo.estado === 'aceptado'"
         class="grid grid-cols-1 gap-2 mt-4"
       >
-
         <button
           @click="ejecutarAccion('emergencia')"
           class="bg-red-500 text-white p-2 rounded"
@@ -141,12 +134,38 @@
         >
           📞 Contactar
         </button>
-
       </div>
-
     </div>
 
-    <div v-else>
+    <div class="flex gap-2 mt-3" v-if="servicioActivo && !servicioActivo.tipo_comprobante">
+      <button
+        @click="generarComprobante(servicioActivo.id, 'estandar')"
+        class="bg-gray-600 text-white px-3 py-1 rounded"
+      >
+        📄 Estándar
+      </button>
+
+      <button
+        @click="generarComprobante(servicioActivo.id, 'premium')"
+        class="bg-yellow-500 text-white px-3 py-1 rounded"
+      >
+        ⭐ Premium
+      </button>
+
+      <button
+        @click="generarComprobante(servicioActivo.id, 'corporativo')"
+        class="bg-blue-700 text-white px-3 py-1 rounded"
+      >
+        🏢 Corporativo
+      </button>
+    </div>
+
+    <div v-if="servicioActivo" class="mt-3 text-sm text-green-600 font-semibold">
+      Comprobante generado:
+      {{ servicioActivo.tipo_comprobante }}
+    </div>
+
+    <div v-if="!servicioActivo">
       <h2 class="font-bold text-lg mb-4">Solicitar servicio</h2>
 
       <div class="flex flex-col gap-3">
@@ -175,21 +194,12 @@
           class="border p-2 rounded"
         />
 
-        <select
-          v-model="form.metodo_pago"
-          class="border p-2 rounded"
-        >
-          <option value="efectivo">
-            💵 Efectivo
-          </option>
+        <select v-model="form.metodo_pago" class="border p-2 rounded">
+          <option value="efectivo">💵 Efectivo</option>
 
-          <option value="tarjeta">
-            💳 Tarjeta
-          </option>
+          <option value="tarjeta">💳 Tarjeta</option>
 
-          <option value="wallet">
-            📱 Wallet
-          </option>
+          <option value="wallet">📱 Wallet</option>
         </select>
 
         <div
@@ -262,7 +272,7 @@ const form = reactive({
   tipo_servicio: "viaje",
   distancia_km: 0,
   valor_oferta: 0,
-  metodo_pago: "efectivo"
+  metodo_pago: "efectivo",
 });
 
 const showToast = (msg, type = "success") => {
@@ -292,10 +302,7 @@ const obtenerPuntos = async () => {
 };
 
 const obtenerNotificacion = async () => {
-
-  const res = await fetch(
-    "http://localhost:8000/notificaciones"
-  );
+  const res = await fetch("http://localhost:8000/notificaciones");
 
   if (!res.ok) return;
 
@@ -368,16 +375,12 @@ const cancelar = async () => {
 
 const ejecutarAccion = async (tipo) => {
   console.log("acaaa");
-  
-  const res = await fetch(
-    `http://localhost:8000/acciones/${tipo}`,
-    {
-      method: "POST"
-    }
-  );
+
+  const res = await fetch(`http://localhost:8000/acciones/${tipo}`, {
+    method: "POST",
+  });
 
   if (!res.ok) {
-
     showToast("Error", "error");
 
     return;
@@ -388,6 +391,17 @@ const ejecutarAccion = async (tipo) => {
   showToast(data.mensaje);
 };
 
+const generarComprobante = async (
+  servicioId,
+  tipo
+) => {
+
+  window.open(
+    `http://localhost:8000/comprobante/${servicioId}/${tipo}`,
+    "_blank"
+  );
+
+};
 const verificarReporte = async () => {
   if (!servicioActivo.value) return;
 
@@ -407,7 +421,6 @@ const verificarReporte = async () => {
 };
 
 onMounted(() => {
-
   obtenerServicio();
 
   obtenerPuntos();
