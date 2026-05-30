@@ -30,6 +30,7 @@ class Servicio(Base):
     descuento_aplicado = Column(Float, default=0)
     promociones = Column(String, nullable=True)
     total_final = Column(Float, default=0)
+    propina = Column(Float, default=0)
     pasajero_id = Column(
         Integer,
         ForeignKey("pasajeros.id")

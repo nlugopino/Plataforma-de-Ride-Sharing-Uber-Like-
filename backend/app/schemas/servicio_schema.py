@@ -30,7 +30,8 @@ class ServicioResponse(BaseModel):
     descuento_aplicado: float
     promociones: Optional[str] = None
     total_final: float
-
+    propina: float = 0
+    
     class Config:
         from_attributes = True
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import random
+from pydantic import BaseModel
 
 from app.database.connection import SessionLocal
 
@@ -19,6 +20,10 @@ from app.services.facade.facade_servicio import FacadeServicio
 router = APIRouter()
 
 facade = FacadeServicio()
+
+class PropinaRequest(BaseModel):
+
+    propina: float
 
 
 def get_db():
@@ -247,3 +252,50 @@ def historial_viajes(
     ).all()
 
     return servicios
+
+@router.put(
+    "/servicios/{servicio_id}/propina"
+)
+def agregar_propina(
+    servicio_id: int,
+    data: PropinaRequest,
+    db: Session = Depends(get_db)
+):
+
+    servicio = db.query(
+        Servicio
+    ).filter(
+        Servicio.id == servicio_id
+    ).first()
+
+    if not servicio:
+
+        raise HTTPException(
+            status_code=404,
+            detail="Servicio no encontrado"
+        )
+
+    if servicio.estado != "finalizado":
+
+        raise HTTPException(
+            status_code=400,
+            detail="Solo se puede dar propina a viajes finalizados"
+        )
+
+    if servicio.propina > 0:
+
+        raise HTTPException(
+            status_code=400,
+            detail="La propina ya fue registrada"
+        )
+
+    servicio.propina = data.propina
+
+    db.commit()
+
+    db.refresh(servicio)
+
+    return {
+        "mensaje":
+        "Propina registrada"
+    }

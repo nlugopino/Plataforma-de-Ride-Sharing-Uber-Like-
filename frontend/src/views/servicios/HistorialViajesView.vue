@@ -67,6 +67,37 @@
       <p class="text-sm text-yellow-600">
         ⭐ +{{ Math.floor(viaje.total_final / 1000) }} puntos
       </p>
+
+      <div v-if="!viaje.propina" class="mt-3">
+        <p class="text-sm font-semibold mb-2">💰 Propina para el conductor</p>
+
+        <div class="flex gap-2">
+          <button
+            @click="agregarPropina(viaje.id, 1000)"
+            class="bg-green-500 text-white px-3 py-1 rounded"
+          >
+            $1.000
+          </button>
+
+          <button
+            @click="agregarPropina(viaje.id, 3000)"
+            class="bg-green-500 text-white px-3 py-1 rounded"
+          >
+            $3.000
+          </button>
+
+          <button
+            @click="agregarPropina(viaje.id, 5000)"
+            class="bg-green-500 text-white px-3 py-1 rounded"
+          >
+            $5.000
+          </button>
+        </div>
+      </div>
+
+      <div v-else class="mt-3 text-green-600">
+        💰 Propina otorgada: $ {{ viaje.propina }}
+      </div>
     </div>
   </div>
 </template>
@@ -79,6 +110,16 @@ const viajes = ref([]);
 
 const toast = ref("");
 const toastType = ref("success");
+
+const showToast = (msg, type = "success") => {
+  toast.value = msg;
+
+  toastType.value = type;
+
+  setTimeout(() => {
+    toast.value = null;
+  }, 2500);
+};
 
 const mostrarToast = (mensaje, tipo = "success") => {
   toast.value = mensaje;
@@ -117,6 +158,36 @@ const calificar = async (servicioId, estrellas) => {
   } catch (error) {
     mostrarToast(error.response.data.detail, "error");
   }
+};
+
+const agregarPropina = async (servicioId, valor) => {
+  const res = await fetch(
+    `http://localhost:8000/servicios/${servicioId}/propina`,
+    {
+      method: "PUT",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        propina: valor,
+      }),
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.json();
+
+    showToast(error.detail, "error");
+
+    return;
+  }
+
+  showToast("Propina registrada");
+
+  // Esperar que se actualice el historial
+  await cargarHistorial();
 };
 
 onMounted(() => {

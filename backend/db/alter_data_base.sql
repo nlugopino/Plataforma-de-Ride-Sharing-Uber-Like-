@@ -10,3 +10,6 @@ CREATE TABLE ubicaciones_frecuentes (
     direccion VARCHAR(255),
     pasajero_id INTEGER REFERENCES pasajeros(id)
 );
+
+ALTER TABLE servicios
+ADD COLUMN propina FLOAT DEFAULT 0;
