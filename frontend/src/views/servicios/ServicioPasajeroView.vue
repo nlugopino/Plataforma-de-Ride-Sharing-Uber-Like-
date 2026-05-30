@@ -137,7 +137,10 @@
       </div>
     </div>
 
-    <div class="flex gap-2 mt-3" v-if="servicioActivo && !servicioActivo.tipo_comprobante">
+    <div
+      class="flex gap-2 mt-3"
+      v-if="servicioActivo && !servicioActivo.tipo_comprobante"
+    >
       <button
         @click="generarComprobante(servicioActivo.id, 'estandar')"
         class="bg-gray-600 text-white px-3 py-1 rounded"
@@ -160,7 +163,10 @@
       </button>
     </div>
 
-    <div v-if="servicioActivo" class="mt-3 text-sm text-green-600 font-semibold">
+    <div
+      v-if="servicioActivo"
+      class="mt-3 text-sm text-green-600 font-semibold"
+    >
       Comprobante generado:
       {{ servicioActivo.tipo_comprobante }}
     </div>
@@ -175,11 +181,35 @@
           class="border p-2 rounded"
         />
 
+        <div class="flex gap-2 flex-wrap">
+          <button
+            v-for="item in ubicaciones"
+            :key="item.id"
+            type="button"
+            @click="form.direccion_origen = item.direccion"
+            class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs"
+          >
+            {{ item.tipo }}
+          </button>
+        </div>
+
         <input
           v-model="form.direccion_destino"
           placeholder="Dirección destino"
           class="border p-2 rounded"
         />
+
+        <div class="flex gap-2 flex-wrap">
+          <button
+            v-for="item in ubicaciones"
+            :key="item.id"
+            type="button"
+            @click="form.direccion_destino = item.direccion"
+            class="bg-green-100 text-green-700 px-2 py-1 rounded text-xs"
+          >
+            {{ item.tipo }}
+          </button>
+        </div>
 
         <select v-model="form.tipo_servicio" class="border p-2 rounded">
           <option value="viaje">Viaje</option>
@@ -266,6 +296,8 @@ const mostrarModalReporte = ref(false);
 
 const tieneReporte = ref(false);
 
+const ubicaciones = ref([]);
+
 const form = reactive({
   direccion_origen: "",
   direccion_destino: "",
@@ -337,13 +369,9 @@ const solicitar = async () => {
   });
 
   if (!res.ok) {
-
     const error = await res.json();
 
-    showToast(
-      error.detail,
-      "error"
-    );
+    showToast(error.detail, "error");
 
     return;
   }
@@ -397,16 +425,11 @@ const ejecutarAccion = async (tipo) => {
   showToast(data.mensaje);
 };
 
-const generarComprobante = async (
-  servicioId,
-  tipo
-) => {
-
+const generarComprobante = async (servicioId, tipo) => {
   window.open(
     `http://localhost:8000/comprobante/${servicioId}/${tipo}`,
     "_blank"
   );
-
 };
 const verificarReporte = async () => {
   if (!servicioActivo.value) return;
@@ -426,11 +449,21 @@ const verificarReporte = async () => {
   }
 };
 
+const obtenerUbicaciones = async () => {
+  const res = await fetch("http://localhost:8000/ubicaciones");
+
+  if (!res.ok) return;
+
+  ubicaciones.value = await res.json();
+};
+
 onMounted(() => {
   obtenerServicio();
 
   obtenerPuntos();
 
   obtenerNotificacion();
+
+  obtenerUbicaciones();
 });
 </script>
