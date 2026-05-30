@@ -98,18 +98,88 @@
       <div v-else class="mt-3 text-green-600">
         💰 Propina otorgada: $ {{ viaje.propina }}
       </div>
+
+      <button
+        v-if="!viaje.tiene_objeto_perdido"
+        @click="reportarObjeto(viaje)"
+        class="bg-orange-500 text-white px-3 py-2 rounded mt-2"
+      >
+        🧳 Reportar objeto perdido
+      </button>
+    </div>
+
+    <div
+      v-if="mostrarModalObjeto"
+      class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-4 rounded w-80 shadow-lg">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-bold">🧳 Objeto perdido</h3>
+
+          <button
+            @click="mostrarModalObjeto = false"
+            class="text-gray-500 hover:text-red-500 text-xl font-bold"
+          >
+            ✕
+          </button>
+        </div>
+
+        <select
+          v-model="objetoPerdido.tipo"
+          class="border p-2 w-full mb-2 rounded"
+        >
+          <option value="celular">Celular</option>
+
+          <option value="llaves">Llaves</option>
+
+          <option value="billetera">Billetera</option>
+        </select>
+
+        <textarea
+          v-model="objetoPerdido.descripcion"
+          class="border p-2 w-full rounded"
+          rows="4"
+          placeholder="Describe el objeto perdido"
+        />
+
+        <div class="flex gap-2 mt-3">
+          <button
+            @click="guardarObjeto"
+            class="flex-1 bg-blue-500 text-white p-2 rounded"
+          >
+            Guardar
+          </button>
+
+          <button
+            @click="mostrarModalObjeto = false"
+            class="flex-1 bg-gray-400 text-white p-2 rounded"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import axios from "axios";
 
 const viajes = ref([]);
 
 const toast = ref("");
 const toastType = ref("success");
+
+const mostrarModalObjeto = ref(false);
+
+const viajeSeleccionado = ref(null);
+
+const objetoPerdido = reactive({
+  tipo: "celular",
+
+  descripcion: "",
+});
 
 const showToast = (msg, type = "success") => {
   toast.value = msg;
@@ -188,6 +258,42 @@ const agregarPropina = async (servicioId, valor) => {
 
   // Esperar que se actualice el historial
   await cargarHistorial();
+};
+
+const reportarObjeto = async (viaje) => {
+  viajeSeleccionado.value = viaje;
+
+  mostrarModalObjeto.value = true;
+};
+
+const guardarObjeto = async () => {
+  const res = await fetch(
+    `http://localhost:8000/objetos-perdidos/${viajeSeleccionado.value.id}`,
+
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(objetoPerdido),
+    }
+  );
+
+  if (!res.ok) {
+    const error = await res.json();
+
+    showToast(error.detail, "error");
+
+    return;
+  }
+
+  showToast("Objeto reportado");
+
+  mostrarModalObjeto.value = false;
+
+  await obtenerHistorial();
 };
 
 onMounted(() => {

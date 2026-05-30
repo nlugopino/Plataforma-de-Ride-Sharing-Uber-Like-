@@ -30,8 +30,6 @@ from app.models.conductor import Conductor
 from app.models.vehiculo import Vehiculo
 from app.models.servicio import Servicio
 from app.models.reporte_incidente import ReporteIncidente
-from app.routes.acciones_routes import router as acciones_router
-from app.routes.comprobante_routes import (router as comprobante_router)
 
 # IMPORTAR RUTAS
 from app.routes.pasajero_routes import router as pasajero_router
@@ -41,6 +39,9 @@ from app.routes.reporte_routes import router as reporte_router
 from app.routes.notificacion_routes import router as notificacion_router
 from app.routes.ubicacion_routes import (router as ubicacion_router)
 from app.routes.reporte_mensual_routes import (router as reporte_mensual_router)
+from app.routes.acciones_routes import router as acciones_router
+from app.routes.comprobante_routes import (router as comprobante_router)
+from app.routes.objeto_perdido_routes import (router as objeto_perdido_router)
 
 # CREAR TABLAS
 Base.metadata.create_all(bind=engine)
@@ -65,6 +66,7 @@ app.include_router(acciones_router)
 app.include_router(comprobante_router)
 app.include_router(ubicacion_router)
 app.include_router(reporte_mensual_router)
+app.include_router(objeto_perdido_router)
 
 # Modelo que define el body del request
 class SolicitudViaje(BaseModel):

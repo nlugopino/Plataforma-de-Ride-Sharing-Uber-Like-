@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import uuid
@@ -31,6 +31,10 @@ class Servicio(Base):
     promociones = Column(String, nullable=True)
     total_final = Column(Float, default=0)
     propina = Column(Float, default=0)
+    tiene_objeto_perdido = Column(
+        Boolean,
+        default=False
+    )
     pasajero_id = Column(
         Integer,
         ForeignKey("pasajeros.id")
