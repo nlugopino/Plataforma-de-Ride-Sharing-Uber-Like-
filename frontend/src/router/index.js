@@ -12,6 +12,9 @@ import ServicioPasajeroView from "../views/servicios/ServicioPasajeroView.vue";
 import ServicioConductorView from "../views/servicios/ServicioConductorView.vue";
 import HistorialViajesView from "../views/servicios/HistorialViajesView.vue";
 
+/* REPORTES */
+import ReporteMensualView from "../views/reportes/ReporteMensualView.vue";
+
 /* PATRONES */
 import BridgeView from "../views/patrones/BridgeView.vue";
 import DecoratorView from "../views/patrones/DecoratorView.vue";
@@ -47,7 +50,10 @@ const routes = [
     path: "/historial-viajes",
     component: HistorialViajesView
   },
-
+  {
+    path: "/reportes/mensual",
+    component: ReporteMensualView
+  },
   /* PATRONES */
   {
     path: "/bridge",

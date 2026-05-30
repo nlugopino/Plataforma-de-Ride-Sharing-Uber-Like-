@@ -13,30 +13,18 @@ const toggleMenu = () => {
 </script>
 
 <template>
-
   <div class="min-h-screen bg-gray-100 flex items-center justify-center">
-
     <!-- CELULAR -->
     <div
       class="w-[360px] h-[640px] bg-white rounded-2xl shadow overflow-hidden relative"
     >
-
       <!-- HEADER -->
       <div class="flex items-center justify-between p-3 border-b">
+        <button @click="toggleMenu" class="text-xl">☰</button>
 
-        <button
-          @click="toggleMenu"
-          class="text-xl"
-        >
-          ☰
-        </button>
-
-        <span class="font-bold">
-          Ride Sharing
-        </span>
+        <span class="font-bold"> Ride Sharing </span>
 
         <div></div>
-
       </div>
 
       <!-- CONTENIDO -->
@@ -56,22 +44,19 @@ const toggleMenu = () => {
         class="absolute top-0 left-0 h-full w-64 bg-white shadow transition-transform duration-300 z-50"
         :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
       >
-
         <!-- TITLE -->
         <div class="p-4 border-b">
-
-          <h2 class="font-bold text-lg">
-            🚖 Menú
-          </h2>
-
+          <h2 class="font-bold text-lg">🚖 Menú</h2>
         </div>
 
         <!-- NAV -->
         <div class="p-2 text-sm">
-
           <!-- HOME -->
           <button
-            @click="$router.push('/'); toggleMenu()"
+            @click="
+              $router.push('/');
+              toggleMenu();
+            "
             class="w-full text-left p-3 rounded hover:bg-gray-100"
           >
             🏠 Inicio
@@ -79,81 +64,92 @@ const toggleMenu = () => {
 
           <!-- PERSONAS -->
           <div>
-
             <button
               @click="personasOpen = !personasOpen"
               class="w-full text-left p-3 rounded hover:bg-gray-100 flex justify-between"
             >
               <span>👥 Personas</span>
-              <span>{{ personasOpen ? '−' : '+' }}</span>
+              <span>{{ personasOpen ? "−" : "+" }}</span>
             </button>
 
-            <div
-              v-if="personasOpen"
-              class="ml-4 flex flex-col"
-            >
-
+            <div v-if="personasOpen" class="ml-4 flex flex-col">
               <button
-                @click="$router.push('/pasajero'); toggleMenu()"
+                @click="
+                  $router.push('/pasajero');
+                  toggleMenu();
+                "
                 class="text-left p-2 hover:bg-gray-100 rounded"
               >
                 Pasajero
               </button>
 
               <button
-                @click="$router.push('/conductor'); toggleMenu()"
+                @click="
+                  $router.push('/conductor');
+                  toggleMenu();
+                "
                 class="text-left p-2 hover:bg-gray-100 rounded"
               >
                 Conductor
               </button>
-
             </div>
-
           </div>
 
           <!-- SERVICIOS -->
           <div>
-
             <button
               @click="serviciosOpen = !serviciosOpen"
               class="w-full text-left p-3 rounded hover:bg-gray-100 flex justify-between"
             >
               <span>🚖 Servicios</span>
-              <span>{{ serviciosOpen ? '−' : '+' }}</span>
+              <span>{{ serviciosOpen ? "−" : "+" }}</span>
             </button>
 
-            <div
-              v-if="serviciosOpen"
-              class="ml-4 flex flex-col"
-            >
-
+            <div v-if="serviciosOpen" class="ml-4 flex flex-col">
               <button
-                @click="$router.push('/servicio-pasajero'); toggleMenu()"
+                @click="
+                  $router.push('/servicio-pasajero');
+                  toggleMenu();
+                "
                 class="text-left p-2 hover:bg-gray-100 rounded"
               >
                 Pasajero
               </button>
 
               <button
-                @click="$router.push('/servicio-conductor'); toggleMenu()"
+                @click="
+                  $router.push('/servicio-conductor');
+                  toggleMenu();
+                "
                 class="text-left p-2 hover:bg-gray-100 rounded"
               >
                 Conductor
               </button>
 
               <button
-                @click="$router.push('/historial-viajes'); toggleMenu()"
+                @click="
+                  $router.push('/historial-viajes');
+                  toggleMenu();
+                "
                 class="text-left p-2 hover:bg-gray-100 rounded"
               >
                 Historial Viajes
               </button>
-
             </div>
-
           </div>
 
+          <button
+            @click="
+              $router.push('/reportes/mensual');
+              toggleMenu();
+            "
+            class="w-full text-left p-3 rounded hover:bg-gray-100"
+          >
+            📊 Reportes
+          </button>
+
           <!-- PATRONES -->
-          <div>
+          <!-- <div>
 
             <button
               @click="patronesOpen = !patronesOpen"
@@ -198,14 +194,9 @@ const toggleMenu = () => {
 
             </div>
 
-          </div>
-
+          </div> -->
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </template>
