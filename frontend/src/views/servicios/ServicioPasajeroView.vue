@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <div class="bg-yellow-100 border border-yellow-300 p-3 rounded mb-4">
+    <div class="bg-yellow-100 text-black border border-yellow-300 p-3 rounded mb-4">
       <div class="flex justify-between items-center">
         <div>
           <p class="font-bold">🏆 Nivel {{ nivel }}</p>
@@ -12,7 +12,7 @@
 
     <div
       v-if="notificacion"
-      class="bg-blue-100 border border-blue-300 p-3 rounded mb-4"
+      class="bg-blue-100 text-black border border-blue-300 p-3 rounded mb-4"
     >
       <p class="text-sm">🔔 {{ notificacion }}</p>
     </div>
@@ -53,14 +53,14 @@
           </strong>
         </p>
 
-        <div class="mt-3 bg-gray-100 p-2 rounded">
+        <div class="mt-3 bg-gray-100 text-black p-2 rounded">
           <div class="flex justify-between">
             <span>Distancia</span>
             <strong>{{ servicioActivo.distancia_km }} km</strong>
           </div>
         </div>
 
-        <div class="mt-3 bg-green-50 p-2 rounded">
+        <div class="mt-3 bg-green-50 text-black p-2 rounded">
           <div class="flex justify-between">
             <span>Oferta original</span>
             <strong> $ {{ servicioActivo.valor_oferta }} </strong>

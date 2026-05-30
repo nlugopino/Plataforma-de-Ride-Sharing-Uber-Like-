@@ -1,25 +1,20 @@
-<script setup>
-import { ref } from "vue";
-
-const isOpen = ref(false);
-
-const personasOpen = ref(false);
-const patronesOpen = ref(false);
-const serviciosOpen = ref(false);
-
-const toggleMenu = () => {
-  isOpen.value = !isOpen.value;
-};
-</script>
-
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center">
+  <div
+    class="min-h-screen flex items-center justify-center transition-colors"
+    :class="tema === 'oscuro' ? 'bg-gray-900' : 'bg-gray-100'"
+  >
     <!-- CELULAR -->
     <div
-      class="w-[360px] h-[640px] bg-white rounded-2xl shadow overflow-hidden relative"
+      class="w-[360px] h-[640px] rounded-2xl shadow overflow-hidden relative transition-colors"
+      :class="
+        tema === 'oscuro' ? 'bg-gray-800 text-white' : 'bg-white text-black'
+      "
     >
       <!-- HEADER -->
-      <div class="flex items-center justify-between p-3 border-b">
+      <div
+        class="flex items-center justify-between p-3 border-b"
+        :class="tema === 'oscuro' ? 'border-gray-700' : 'border-gray-200'"
+      >
         <button @click="toggleMenu" class="text-xl">☰</button>
 
         <span class="font-bold"> Ride Sharing </span>
@@ -41,8 +36,12 @@ const toggleMenu = () => {
 
       <!-- DRAWER -->
       <div
-        class="absolute top-0 left-0 h-full w-64 bg-white shadow transition-transform duration-300 z-50"
-        :class="isOpen ? 'translate-x-0' : '-translate-x-full'"
+        class="absolute top-0 left-0 h-full w-64 shadow transition-transform duration-300 z-50"
+        :class="[
+          tema === 'oscuro' ? 'bg-gray-800 text-white' : 'bg-white text-black',
+
+          isOpen ? 'translate-x-0' : '-translate-x-full',
+        ]"
       >
         <!-- TITLE -->
         <div class="p-4 border-b">
@@ -51,6 +50,17 @@ const toggleMenu = () => {
 
         <!-- NAV -->
         <div class="p-2 text-sm">
+          <button
+            @click="
+              cambiarTema();
+              toggleMenu();
+            "
+            class="w-full text-left p-3 rounded hover:bg-gray-100"
+            :class="menuClass"
+          >
+            {{ tema === "claro" ? "🌙 Modo nocturno" : "☀️ Modo claro" }}
+          </button>
+
           <!-- HOME -->
           <button
             @click="
@@ -58,6 +68,7 @@ const toggleMenu = () => {
               toggleMenu();
             "
             class="w-full text-left p-3 rounded hover:bg-gray-100"
+            :class="menuClass"
           >
             🏠 Inicio
           </button>
@@ -67,6 +78,7 @@ const toggleMenu = () => {
             <button
               @click="personasOpen = !personasOpen"
               class="w-full text-left p-3 rounded hover:bg-gray-100 flex justify-between"
+              :class="menuClass"
             >
               <span>👥 Personas</span>
               <span>{{ personasOpen ? "−" : "+" }}</span>
@@ -79,6 +91,7 @@ const toggleMenu = () => {
                   toggleMenu();
                 "
                 class="text-left p-2 hover:bg-gray-100 rounded"
+                :class="menuClass"
               >
                 Pasajero
               </button>
@@ -89,6 +102,7 @@ const toggleMenu = () => {
                   toggleMenu();
                 "
                 class="text-left p-2 hover:bg-gray-100 rounded"
+                :class="menuClass"
               >
                 Conductor
               </button>
@@ -100,6 +114,7 @@ const toggleMenu = () => {
             <button
               @click="serviciosOpen = !serviciosOpen"
               class="w-full text-left p-3 rounded hover:bg-gray-100 flex justify-between"
+              :class="menuClass"
             >
               <span>🚖 Servicios</span>
               <span>{{ serviciosOpen ? "−" : "+" }}</span>
@@ -112,6 +127,7 @@ const toggleMenu = () => {
                   toggleMenu();
                 "
                 class="text-left p-2 hover:bg-gray-100 rounded"
+                :class="menuClass"
               >
                 Pasajero
               </button>
@@ -122,6 +138,7 @@ const toggleMenu = () => {
                   toggleMenu();
                 "
                 class="text-left p-2 hover:bg-gray-100 rounded"
+                :class="menuClass"
               >
                 Conductor
               </button>
@@ -132,6 +149,7 @@ const toggleMenu = () => {
                   toggleMenu();
                 "
                 class="text-left p-2 hover:bg-gray-100 rounded"
+                :class="menuClass"
               >
                 Historial Viajes
               </button>
@@ -144,6 +162,7 @@ const toggleMenu = () => {
               toggleMenu();
             "
             class="w-full text-left p-3 rounded hover:bg-gray-100"
+            :class="menuClass"
           >
             📊 Reportes
           </button>
@@ -200,3 +219,49 @@ const toggleMenu = () => {
     </div>
   </div>
 </template>
+<script setup>
+import { ref, onMounted, computed } from "vue";
+
+const isOpen = ref(false);
+
+const personasOpen = ref(false);
+const patronesOpen = ref(false);
+const serviciosOpen = ref(false);
+const tema = ref("claro");
+
+const toggleMenu = () => {
+  isOpen.value = !isOpen.value;
+};
+
+const cargarTema = async () => {
+  const res = await fetch("http://localhost:8000/tema");
+
+  if (!res.ok) return;
+
+  const data = await res.json();
+
+  tema.value = data.tema;
+};
+
+const cambiarTema = async () => {
+  const nuevoTema = tema.value === "claro" ? "oscuro" : "claro";
+
+  await fetch(
+    `http://localhost:8000/tema/${nuevoTema}`,
+
+    {
+      method: "PUT",
+    }
+  );
+
+  tema.value = nuevoTema;
+};
+
+const menuClass = computed(() =>
+  tema.value === "oscuro" ? "hover:bg-gray-700" : "hover:bg-gray-100"
+);
+
+onMounted(() => {
+  cargarTema();
+});
+</script>

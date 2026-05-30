@@ -12,3 +12,7 @@ class Pasajero(Base):
     telefono = Column(String)
     puntos = Column(Integer, default=0)
     nivel = Column(String, default="Bronce")
+    tema = Column(
+        String,
+        default="claro"
+    )

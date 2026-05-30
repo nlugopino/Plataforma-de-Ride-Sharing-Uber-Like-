@@ -18,7 +18,7 @@
     <div
       v-for="viaje in viajes"
       :key="viaje.id"
-      class="bg-white p-4 rounded shadow mb-4"
+      class="bg-white text-black p-4 rounded shadow mb-4"
     >
       <p>
         <strong>Origen:</strong>

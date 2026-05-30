@@ -26,7 +26,7 @@
         $ {{ servicioActivo.valor_oferta }}
       </p>
 
-      <div class="mt-3 bg-gray-100 p-2 rounded">
+      <div class="mt-3 bg-gray-100 text-black p-2 rounded">
 
         <div class="flex justify-between">
           <span>Distancia</span>

@@ -29,3 +29,7 @@ CREATE TABLE objetos_perdidos (
 
     servicio_id INTEGER UNIQUE REFERENCES servicios(id)
 );
+
+ALTER TABLE pasajeros
+ADD COLUMN tema VARCHAR(20)
+DEFAULT 'claro';
