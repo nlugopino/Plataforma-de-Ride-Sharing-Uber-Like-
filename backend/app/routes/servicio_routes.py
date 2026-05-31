@@ -15,6 +15,14 @@ from app.schemas.servicio_schema import (
     CalificacionRequest
 )
 
+from app.mementos.servicio_memento import (
+    ServicioMemento
+)
+
+from app.mementos.servicio_caretaker import (
+    ServicioCaretaker
+)
+
 from app.services.facade.facade_servicio import FacadeServicio
 
 router = APIRouter()
@@ -103,6 +111,23 @@ def cancelar(
         )
 
     try : 
+        
+        memento = ServicioMemento(
+
+            servicio.direccion_origen,
+
+            servicio.direccion_destino,
+
+            servicio.tipo_servicio,
+
+            servicio.distancia_km,
+
+            servicio.valor_oferta
+        )
+
+        ServicioCaretaker.guardar(
+            memento
+        )
 
         return facade.cancelar(db, servicio)
     
@@ -298,4 +323,35 @@ def agregar_propina(
     return {
         "mensaje":
         "Propina registrada"
+    }
+
+@router.get(
+    "/servicios/restaurar"
+)
+def restaurar_servicio():
+
+    memento = (
+        ServicioCaretaker.obtener()
+    )
+
+    if not memento:
+
+        return None
+
+    return {
+
+        "direccion_origen":
+        memento.direccion_origen,
+
+        "direccion_destino":
+        memento.direccion_destino,
+
+        "tipo_servicio":
+        memento.tipo_servicio,
+
+        "distancia_km":
+        memento.distancia_km,
+
+        "valor_oferta":
+        memento.valor_oferta
     }

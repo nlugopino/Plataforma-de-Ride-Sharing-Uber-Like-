@@ -1,6 +1,8 @@
 <template>
   <div class="relative">
-    <div class="bg-yellow-100 text-black border border-yellow-300 p-3 rounded mb-4">
+    <div
+      class="bg-yellow-100 text-black border border-yellow-300 p-3 rounded mb-4"
+    >
       <div class="flex justify-between items-center">
         <div>
           <p class="font-bold">🏆 Nivel {{ nivel }}</p>
@@ -173,6 +175,13 @@
 
     <div v-if="!servicioActivo">
       <h2 class="font-bold text-lg mb-4">Solicitar servicio</h2>
+
+      <button
+        @click="restaurarServicio"
+        class="bg-yellow-500 text-white px-4 py-2 rounded mb-4 w-full"
+      >
+        ↩️ Restaurar última solicitud
+      </button>
 
       <div class="flex flex-col gap-3">
         <input
@@ -405,6 +414,28 @@ const cancelar = async () => {
   form.direccion_destino = "";
 
   showToast("Servicio cancelado");
+};
+
+const restaurarServicio = async () => {
+  const res = await fetch("http://localhost:8000/servicios/restaurar");
+
+  if (!res.ok) return;
+
+  const data = await res.json();
+
+  if (!data) return;
+
+  form.direccion_origen = data.direccion_origen;
+
+  form.direccion_destino = data.direccion_destino;
+
+  form.tipo_servicio = data.tipo_servicio;
+
+  form.distancia_km = data.distancia_km;
+
+  form.valor_oferta = data.valor_oferta;
+
+  showToast("Solicitud restaurada");
 };
 
 const ejecutarAccion = async (tipo) => {
